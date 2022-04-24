@@ -1,6 +1,6 @@
 ﻿namespace FileDataToExcel.Models
 {
-    public class Datatxt
+    public class Txtdata
     {
         public string? ID { get; set; }
         public string? UNIT { get; set; }

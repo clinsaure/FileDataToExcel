@@ -1,4 +1,5 @@
-﻿@page "/filetxt"
+﻿@page "/txtdata"
+
 @using ClosedXML.Excel
 @using ClosedXML.Report
 @using FileDataToExcel.Models
@@ -29,34 +30,30 @@
     <MudButton OnClick="Clear" Disabled="@(!loadedFiles.Any())" Color="Color.Error" Variant="Variant.Filled">Clear</MudButton>
 </MudToolBar>
 
-<MudTable Items="@datatxts" Hover="true" Dense="true" Bordered="true" Striped="true" Filter="new Func<Datatxt,bool>(FilterFunc1)">
+<MudTable Items="@datatxts" Hover="true" Dense="true" Bordered="true" Striped="true" Filter="new Func<Txtdata,bool>(FilterFunc1)">
     <ToolBarContent>
         <MudText Typo="Typo.h6">SYSTEM ENTITY</MudText>
+        <MudSpacer />
         <MudButton OnClick="ExportToExcel" Disabled="@(!loadedFiles.Any())" Color="Color.Primary" Variant="Variant.Filled">ExportExcel</MudButton>
         <MudSpacer />
         <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-        @foreach (var prop in dataTxtProps)
+        @foreach (var prop in props)
         {
             <MudTh>@prop</MudTh>
         }
     </HeaderContent>
     <RowTemplate>
-           @foreach (var datatxt in datatxts)
+        @foreach (var datatxt in datatxts)
         {
-        @foreach (var prop in dataTxtProps)
-        {
-            
-       
-     
-            @*int i = 1;
-            foreach (var prop in dataTxtProps)
-            {*@
-                <MudTd DataLabel="@prop">@context.GetType().GetProperty(prop).GetValue(datatxt, null)</MudTd>
-                
-            @*}*@
-        } }
+
+            @foreach (var prop in props)
+            {
+                @*<MudTd DataLabel="@prop">@context.GetType().GetProperty(prop).GetValue(datatxt, null)</MudTd>*@
+                <MudTd DataLabel="@prop">@context.GetType().GetProperty(@prop).GetValue(@datatxt, null)</MudTd>
+            }
+        }
     </RowTemplate>
     <PagerContent>
         <MudTablePager />
@@ -71,28 +68,15 @@
     private string DragClass = DefaultDragClass;
     private List<IBrowserFile> loadedFiles = new();
     private string searchString1 = String.Empty;
-    private List<string?> dataTxtProps = new();
-    private List<Datatxt> datatxts = new();
+    private List<string?> props = new();
+    private List<Txtdata> datatxts = new();
 
-
-    enum Datatxtenum
-    {
-
-        ID, UNIT, PTDESC, KEYWORD, PRIMMOD, ASSOCDSP, CDETAI,
-        HWYNUM, PNTBOXTY, BOXNUM, PTDISCL, SLOTNUM, INPTSSLT,
-        LOADDEST, EUDESC, PVFORMAT, PVEULO, PVEUHI, PVDSPLO,
-        PVDSPHI, OVERVAL, PVRNGOP, PVCLAMP, CALIBOFF, AUXUNIT,
-        ALFMT, ALDLOPT, DLYTIME, REALARM, PVLOTP, PVHITP,
-        PVALDB, CNFERRPR, DEVHIPR, DEVLOPR, PVHIPR, PVLOPR,
-        UNREASPR, CRITSCAN, CCRANK, EIPPCODE, EIPEVENT, EIPENB,
-        ALENBST, PVTV, PNTBOXIN, PNTPCTY, PCADDRI1, SPECIFI1, RNGCODE1
-    }
 
     protected override void OnInitialized()
     {
-        foreach (var propertyInfo in typeof(Datatxt).GetProperties())
+        foreach (var propertyInfo in typeof(Txtdata).GetProperties())
         {
-            dataTxtProps.Add(propertyInfo.Name);
+            props.Add(propertyInfo.Name);
         }
     }
 
@@ -127,7 +111,7 @@
             MemoryStream ms = new MemoryStream();
             await stream.CopyToAsync(ms);
 
-            //stream.Close();
+            stream.Close();
             var outputFileString = System.Text.Encoding.UTF8.GetString(ms.ToArray());
 
             String[] fileContents = outputFileString.Split("{");
@@ -142,9 +126,9 @@
 
                 foreach (var strContent in strContents)
                 {
-                    Datatxt datatxt = new();
+                    Txtdata datatxt = new();
 
-                    foreach (var prop in dataTxtProps)//foreach (var dEnum in Enum.GetValues(typeof(Datatxtenum)))
+                    foreach (var prop in props)//foreach (var dEnum in Enum.GetValues(typeof(Datatxtenum)))
                     {
                         //results.Add(dEnum.ToString());
                         if (prop == "ID")
@@ -199,14 +183,14 @@
     //    return result;
     //}
 
-    private bool FilterFunc1(Datatxt element) => FilterFunc(element, searchString1);
+    private bool FilterFunc1(Txtdata element) => FilterFunc(element, searchString1);
 
-    private bool FilterFunc(Datatxt element, string searchString)
+    private bool FilterFunc(Txtdata element, string searchString)
     {
         foreach (var datatxt in datatxts)
         {
             int i = 1;
-            foreach (var prop in dataTxtProps)
+            foreach (var prop in props)
             {
                 if (element.GetType().GetProperty(prop).Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                     return true;
@@ -225,14 +209,14 @@
 
             IXLWorksheet worksheet = workbook.Worksheets.Add("System");
             var p = 1;
-            foreach (var prop in dataTxtProps)
+            foreach (var prop in props)
             {
                 worksheet.Cell(1, p).Value = prop;
                 p++;
             }
 
 
-            for (int i = 1; i <= dataTxtProps.Count(); i++)
+            for (int i = 1; i <= props.Count(); i++)
             {
                 worksheet.Cell(1, i).Style.Font.Bold = true;
             }
@@ -241,7 +225,7 @@
             foreach (var datatxt in datatxts)
             {
                 int i = 1;
-                foreach (var prop in dataTxtProps)
+                foreach (var prop in props)
                 {
                     worksheet.Cell(index + 1, i).Value = datatxt.GetType().GetProperty(prop).GetValue(datatxt, null);
                     i++;
