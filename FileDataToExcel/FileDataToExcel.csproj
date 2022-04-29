@@ -9,7 +9,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="ClosedXML" Version="0.95.4" />
-		<PackageReference Include="ClosedXML.Report" Version="0.2.4" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.4" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.4" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />

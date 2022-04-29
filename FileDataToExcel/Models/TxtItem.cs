@@ -1,8 +1,8 @@
 ﻿namespace FileDataToExcel.Models
 {
-    public class Txtdata
+    public class TxtItem
     {
-        public string? ID { get; set; }
+        public string? TAGNUMBER { get; set; }
         public string? UNIT { get; set; }
         public string? PTDESC { get; set; }
         public string? KEYWORD { get; set; }

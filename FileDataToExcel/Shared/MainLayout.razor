@@ -11,9 +11,10 @@
         @*<MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Link="https://mudblazor.com/" Target="_blank" />
         <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/MudBlazor/MudBlazor/" Target="_blank" />*@
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Variant="@DrawerVariant.Mini" Elevation="1">
-        <MudDrawerHeader>
-            <MudLink Href="" Underline="Underline.None" Typo="Typo.h6">FileDataToExcel</MudLink>
+    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Never" Variant="@DrawerVariant.Mini" Elevation="1" Color="Color.Primary">
+        <MudDrawerHeader Class="blue darken-4 shades-text text-white">
+            <MudText Typo="Typo.h6">MDCSTEC TOOLS</MudText>
+            @*<MudLink Href="" Color="Color.Inherit" Underline="Underline.None" Typo="Typo.h6">MDCSTEC TOOLS</MudLink>*@
         </MudDrawerHeader>
         <NavMenu />
     </MudDrawer>
@@ -26,6 +27,7 @@
 
 @code {
     bool _drawerOpen = true;
+    private MudTheme Theme = new MudTheme();
 
     void DrawerToggle()
     {
