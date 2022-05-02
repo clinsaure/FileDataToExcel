@@ -14,7 +14,7 @@
 <MudPaper @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass" Height="100px" Outlined="true" Class="@DragClass">
     @if (!Clearing)
     {
-        <InputFile OnChange="OnInputFileChanged" multiple class="absolute mud-width-full mud-height-full overflow-hidden z-2" style="opacity:0;" />
+        <InputFile OnChange="OnInputFileChanged" multiple class="absolute mud-width-full mud-height-full overflow-hidden z-2" style="opacity:0;" accept=".EB, .txt" />
     }
     <MudText Typo="Typo.h6">Drag and drop files here or click</MudText>
     @foreach (var file in loadedFiles)
@@ -27,6 +27,16 @@
     <MudButton OnClick="Upload" Disabled="@(!loadedFiles.Any())" Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Filled.UploadFile" Class="mr-1">Upload</MudButton>
     <MudButton OnClick="Clear" Disabled="@(!loadedFiles.Any())" Color="Color.Error" Variant="Variant.Filled" StartIcon="@Icons.Filled.Clear">Clear</MudButton>
 </MudToolBar>
+
+@*<InputFile id="fileInput" OnChange="UploadFiles" hidden multiple />
+
+    <MudButton HtmlTag="label"
+    Variant="Variant.Filled"
+    Color="Color.Primary"
+    StartIcon="@Icons.Filled.CloudUpload"
+    for="fileInput">
+    Upload Files
+    </MudButton>*@
 
 
 @*<MudTable Items="@TxtItems" Hover="true" Dense="true" Bordered="true" Striped="true" Filter="new Func<TxtItem,bool>(FilterFunc1)">
@@ -117,7 +127,8 @@
     {
         foreach (var file in e.GetMultipleFiles())
         {
-            loadedFiles.Add(file);
+            if (file.Name.Split(".")[1] == "EB" || file.Name.Split(".")[1] == "txt")
+                loadedFiles.Add(file);
         }
         //TODO upload the files to the server
 
@@ -149,7 +160,7 @@
             stream.Close();
             var outputFileString = System.Text.Encoding.UTF8.GetString(ms.ToArray());
 
-            String[] fileContents = outputFileString.Split("{");
+            String[] fileContents = outputFileString.Split("{SYSTEM ENTITY");
 
             fileContents = fileContents.Skip(1).ToArray();
 
@@ -166,19 +177,51 @@
                     foreach (var prop in props)//foreach (var dEnum in Enum.GetValues(typeof(Datatxtenum)))
                     {
                         //results.Add(dEnum.ToString());
+
+                        string pattern = string.Empty;
+                        string dataPattern = string.Empty;
+
                         if (prop == "TAGNUMBER")
                         {
-                            var pattern = @"&N(.*)";
-                            var dataPattern = Regex.Match(strContent, pattern, RegexOptions.IgnoreCase).Groups[1].Value;
+                            pattern = @"&N(.*)";
+                            dataPattern = Regex.Match(strContent, pattern, RegexOptions.IgnoreCase).Groups[1].Value;
                             txtItem.TAGNUMBER = dataPattern;
                         }
                         else
                         {
-                            var pattern = @"" + prop.ToString() + "(.*)";
-                            var dataPattern = Regex.Match(strContent, pattern, RegexOptions.IgnoreCase).Groups[1].Value.Split("=")[1];
-
-                            txtItem.GetType().GetProperty(prop).SetValue(txtItem, dataPattern);
+                            pattern = @"" + prop + "(.*)";
+                            StringComparison comp = StringComparison.OrdinalIgnoreCase;
+                            Boolean result = strContent.Contains(prop, comp);
+                            if (result)
+                            {
+                                dataPattern = Regex.Match(strContent, pattern, RegexOptions.IgnoreCase).Groups[1].Value.Split("=")[1];
+                                txtItem.GetType().GetProperty(prop).SetValue(txtItem, dataPattern);
+                            }
+                            else
+                            {
+                                txtItem.GetType().GetProperty(prop).SetValue(txtItem, "");
+                            }
                         }
+
+                        //switch (prop)
+                        //{
+                        //    case "TAGNUMBER":
+                        //        pattern = @"&N(.*)";
+                        //        dataPattern = Regex.Match(strContent, pattern, RegexOptions.IgnoreCase).Groups[1].Value;
+                        //        txtItem.TAGNUMBER = dataPattern;
+                        //        break;
+                        //    case prop:
+                        //        pattern = @"" + prop + "(.*)";
+                        //        dataPattern = Regex.Match(strContent, pattern, RegexOptions.IgnoreCase).Groups[1].Value.Split("=")[1];
+                        //        txtItem.GetType().GetProperty(prop).SetValue(txtItem, dataPattern);
+                        //        break;
+                        //    default:
+                        //        pattern = @"" + prop + "(.*)";
+                        //        dataPattern = Regex.Match(strContent, pattern, RegexOptions.IgnoreCase).Groups[1].Value.Split("=")[1];
+                        //        txtItem.GetType().GetProperty(prop).SetValue(txtItem, dataPattern);
+                        //        break;
+                        //}
+
                     }
 
                     if (!TxtItems.Any(x => x.TAGNUMBER == txtItem.TAGNUMBER))
@@ -189,7 +232,7 @@
             }
         }
 
-        if(fileExist > 0)
+        if (fileExist > 0)
             Snackbar.Add("" + fileExist + " File(s) already exist", Severity.Info);
 
         await Clear();

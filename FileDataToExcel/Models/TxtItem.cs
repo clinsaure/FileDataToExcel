@@ -51,6 +51,20 @@
         public string? PNTPCTY { get; set; }
         public string? PCADDRI1 { get; set; }
         public string? SPECIFI1 { get; set; }
+        public string? PCADDRI2 { get; set; }
+        public string? SPECIFI2 { get; set; }
         public string? RNGCODE1 { get; set; }
+
+        public string? NMBRINPT { get; set; }
+        public string? DIGALFMT { get; set; }
+        public string? CHOFSTPR { get; set; }
+        public string? OFFNRMPR { get; set; }
+        public string? ZZTEXT { get; set; }
+        public string? STATE2 { get; set; }
+        public string? STATE1 { get; set; }
+        public string? UBOXCLR { get; set; }
+        public string? LBOXCLR { get; set; }
+        public string? INPTDIR { get; set; }
+        public string? CDETAIL { get; set; }
     }
 }
