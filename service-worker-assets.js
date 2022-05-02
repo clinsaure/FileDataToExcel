@@ -21,10 +21,6 @@
       "url": "manifest.json"
     },
     {
-      "hash": "sha256-4Yh4OTT5TEAPNyXEzOG+n5l2HPK294WFItz4SIelj88=",
-      "url": "sample-data\/weather.json"
-    },
-    {
       "hash": "sha256-wC+zAyYHVTNzevCw3SFvHI4jG51pV1+b5sQ3Rj11QGI=",
       "url": "_framework\/blazor.webassembly.js"
     },
@@ -57,7 +53,7 @@
       "url": "_framework\/icudt.dat"
     },
     {
-      "hash": "sha256-CRBd8cLfjjgmaPvyD1v59rMz2P21hQAPsByP15F\/kH0=",
+      "hash": "sha256-8fR0sckx1pdHq5uBpRSQrOAGEe8Pp1bZdrdbI47h2A8=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -73,7 +69,7 @@
       "url": "_framework\/ExcelNumberFormat.dll"
     },
     {
-      "hash": "sha256-6ItojAppqCB1PH8sErN+WasX1aDfzEssdVlw+xHseBc=",
+      "hash": "sha256-bwKCv9IGsMbDGlti3K4ypKwfHpaJBcFwWoJoDtY1eRE=",
       "url": "_framework\/FileDataToExcel.dll"
     },
     {
@@ -269,12 +265,8 @@
       "url": "_framework\/System.Memory.dll"
     },
     {
-      "hash": "sha256-iR40bxkRbAmByz4uu9v0czVCb9uaoQQN\/2u0qDQcTWg=",
+      "hash": "sha256-dxMaPW5auhHUp9ffFkxhOTFlPcSp0jSYGGtw6A1vzuQ=",
       "url": "_framework\/System.Net.Http.dll"
-    },
-    {
-      "hash": "sha256-R2jvaVevw8oTrmpbqGrSa5WoojPECcUdZrxXRFwKYVE=",
-      "url": "_framework\/System.Net.Http.Json.dll"
     },
     {
       "hash": "sha256-CcOHXBFr3sBbp5WMGkCFf0CJZ+vIT8e\/M3KSVYfEi7g=",
@@ -285,7 +277,7 @@
       "url": "_framework\/System.ObjectModel.dll"
     },
     {
-      "hash": "sha256-vm9tXVxhKZgbX9UANYfhPEPx8xN35OAhitWG\/riCT54=",
+      "hash": "sha256-49+vvxkDVcVBtXjkwbCtBnLb17ExW439xr9Nkg6RUd0=",
       "url": "_framework\/System.Private.CoreLib.dll"
     },
     {
@@ -365,7 +357,7 @@
       "url": "_framework\/System.Text.Encodings.Web.dll"
     },
     {
-      "hash": "sha256-xfgmqmrQsJxeQ3SQjaheRgejWcKjTqd6LRNIxU3W8XI=",
+      "hash": "sha256-ff\/lG9sXU3eqeRSk6NzzaAAbh5Coaij1z66a5c8p8iw=",
       "url": "_framework\/System.Text.Json.dll"
     },
     {
@@ -393,5 +385,5 @@
       "url": "_content\/MudBlazor\/MudBlazor.min.js"
     }
   ],
-  "version": "hWDyWP6A"
+  "version": "dKRYnDDT"
 };
