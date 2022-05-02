@@ -2,7 +2,7 @@
 {
     public class TxtItem
     {
-        public string? TAGNAME { get; set; }
+        public string? POINTTYPE { get; set; }
         public string? TAGNUMBER { get; set; }
         public string? UNIT { get; set; }
         public string? PTDESC { get; set; }
