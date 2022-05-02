@@ -16,7 +16,7 @@
     {
         <InputFile OnChange="OnInputFileChanged" multiple class="absolute mud-width-full mud-height-full overflow-hidden z-2" style="opacity:0;" accept=".EB, .txt" />
     }
-    <MudText Typo="Typo.h6">Drag and drop files here or click</MudText>
+    <MudText Typo="Typo.h6">Drag and drop files here or click MAX 10 FILES</MudText>
     @foreach (var file in loadedFiles)
     {
         <MudChip Color="Color.Dark" Text="@file.Name" />
