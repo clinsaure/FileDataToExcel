@@ -11,7 +11,7 @@
 
 @inject ISnackbar Snackbar
 
-<MudPaper @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass" Height="100px" Outlined="true" Class="@DragClass">
+<MudPaper @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass" Height="125px" Outlined="true" Class="@DragClass">
     @if (!Clearing)
     {
         <InputFile OnChange="OnInputFileChanged" multiple class="absolute mud-width-full mud-height-full overflow-hidden z-2" style="opacity:0;" accept=".EB, .txt" />
@@ -123,17 +123,17 @@
         Upload();
     }
 
-    private void UploadFiles(InputFileChangeEventArgs e)
-    {
-        foreach (var file in e.GetMultipleFiles())
-        {
-            if (file.Name.Split(".")[1] == "EB" || file.Name.Split(".")[1] == "txt")
-                loadedFiles.Add(file);
-        }
-        //TODO upload the files to the server
+    //private void UploadFiles(InputFileChangeEventArgs e)
+    //{
+    //    foreach (var file in e.GetMultipleFiles())
+    //    {
+    //        if (file.Name.Split(".")[1] == "EB" || file.Name.Split(".")[1] == "txt")
+    //            loadedFiles.Add(file);
+    //    }
+    //    //TODO upload the files to the server
 
-        Upload();
-    }
+    //    Upload();
+    //}
 
     private async Task Clear()
     {
@@ -181,46 +181,42 @@
                         string pattern = string.Empty;
                         string dataPattern = string.Empty;
 
-                        if (prop == "TAGNUMBER")
+                        switch (prop)
                         {
-                            pattern = @"&N(.*)";
-                            dataPattern = Regex.Match(strContent, pattern, RegexOptions.IgnoreCase).Groups[1].Value;
-                            txtItem.TAGNUMBER = dataPattern;
-                        }
-                        else
-                        {
-                            pattern = @"" + prop + "(.*)";
-                            StringComparison comp = StringComparison.OrdinalIgnoreCase;
-                            Boolean result = strContent.Contains(prop, comp);
-                            if (result)
-                            {
-                                dataPattern = Regex.Match(strContent, pattern, RegexOptions.IgnoreCase).Groups[1].Value.Split("=")[1];
-                                txtItem.GetType().GetProperty(prop).SetValue(txtItem, dataPattern);
-                            }
-                            else
-                            {
-                                txtItem.GetType().GetProperty(prop).SetValue(txtItem, "");
-                            }
-                        }
+                            case "TAGNAME":
+                                pattern = @"&T(.*)";
+                                dataPattern = Regex.Match(strContent, pattern, RegexOptions.IgnoreCase).Groups[1].Value;
+                                txtItem.TAGNAME = dataPattern;
+                                break;
+                            case "TAGNUMBER":
+                                pattern = @"&N(.*)";
+                                dataPattern = Regex.Match(strContent, pattern, RegexOptions.IgnoreCase).Groups[1].Value;
+                                txtItem.TAGNUMBER = dataPattern;
+                                break;
+                            default:
+                                pattern = @"" + prop + "(.*)";
+                                //pattern = @"" + prop + "";
+                                StringComparison comp = StringComparison.OrdinalIgnoreCase;
+                                Boolean result = strContent.Contains(prop, comp);
+                                if (result)
+                                {
+                                    try
+                                    {
+                                        dataPattern = Regex.Match(strContent, pattern, RegexOptions.IgnoreCase).Groups[1].Value.Split("=")[1];
+                                        txtItem.GetType().GetProperty(prop).SetValue(txtItem, dataPattern);
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        //Snackbar.Add(e.Message, Severity.Error);
+                                    }
 
-                        //switch (prop)
-                        //{
-                        //    case "TAGNUMBER":
-                        //        pattern = @"&N(.*)";
-                        //        dataPattern = Regex.Match(strContent, pattern, RegexOptions.IgnoreCase).Groups[1].Value;
-                        //        txtItem.TAGNUMBER = dataPattern;
-                        //        break;
-                        //    case prop:
-                        //        pattern = @"" + prop + "(.*)";
-                        //        dataPattern = Regex.Match(strContent, pattern, RegexOptions.IgnoreCase).Groups[1].Value.Split("=")[1];
-                        //        txtItem.GetType().GetProperty(prop).SetValue(txtItem, dataPattern);
-                        //        break;
-                        //    default:
-                        //        pattern = @"" + prop + "(.*)";
-                        //        dataPattern = Regex.Match(strContent, pattern, RegexOptions.IgnoreCase).Groups[1].Value.Split("=")[1];
-                        //        txtItem.GetType().GetProperty(prop).SetValue(txtItem, dataPattern);
-                        //        break;
-                        //}
+                                }
+                                else
+                                {
+                                    txtItem.GetType().GetProperty(prop).SetValue(txtItem, "");
+                                }
+                                break;
+                        }
 
                     }
 
