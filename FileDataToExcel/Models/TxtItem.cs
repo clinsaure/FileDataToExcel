@@ -1,5 +1,6 @@
 ﻿namespace FileDataToExcel.Models
 {
+    [Serializable]
     public class TxtItem
     {
         public string? POINTTYPE { get; set; }
@@ -9,7 +10,7 @@
         public string? KEYWORD { get; set; }
         public string? PRIMMOD { get; set; }
         public string? ASSOCDSP { get; set; }
-        public string? CDETAI { get; set; }
+        public string? CDETAIL { get; set; }
         public string? HWYNUM { get; set; }
         public string? PNTBOXTY { get; set; }
         public string? BOXNUM { get; set; }
@@ -66,6 +67,5 @@
         public string? UBOXCLR { get; set; }
         public string? LBOXCLR { get; set; }
         public string? INPTDIR { get; set; }
-        public string? CDETAIL { get; set; }
     }
 }

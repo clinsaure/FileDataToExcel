@@ -23,6 +23,7 @@
         <MudChip Color="Color.Dark" Text="@file.Name" />
     }
 </MudPaper>
+<br/>
 
 <MudProgressLinear hidden="@(!loadedFiles.Any())" Color="Color.Tertiary" Size="Size.Medium" Indeterminate="true" Class="my-7"/>
 
@@ -31,7 +32,7 @@
     <MudButton OnClick="Clear" Disabled="@(!loadedFiles.Any())" Color="Color.Error" Variant="Variant.Filled" StartIcon="@Icons.Filled.Clear">Clear</MudButton>
 </MudToolBar>*@
 
-<MudText Typo="Typo.h6">@filesCount</MudText>
+@*<MudText Typo="Typo.h6">@filesCount</MudText>*@
 
 <MudDataGrid T="HtmlItem" MultiSelection="true" Items="@HtmlItems" Sortable="true" Filterable="true" QuickFilter="@_quickFilter"
              Hideable="true" Hover="true" Dense="true" Bordered="true" Striped="true">
@@ -69,7 +70,7 @@
     private List<string?> props = new();
     private List<HtmlItem> HtmlItems = new();
 
-    private string? filesCount;
+    //private string? filesCount;
 
     protected override void OnInitialized()
     {

@@ -1,11 +1,16 @@
-﻿@page "/txtdata"
+﻿@page "/xmldata"
 
+@using System.Diagnostics
+@using System.Dynamic
+@using System.ComponentModel
+@using System.Collections.Specialized
+@using System.Collections
 @inject IJSRuntime JSRuntime
 
 
 <PageTitle>File txt</PageTitle>
 
-<MudText Typo="Typo.h3" GutterBottom="true" Align="Align.Center">EB TO EXCEL</MudText>
+<MudText Typo="Typo.h3" GutterBottom="true" Align="Align.Center">XML ANALYSIS</MudText>
 
 @inject ISnackbar Snackbar
 
@@ -22,11 +27,11 @@
 </MudPaper>
 <br />
 
-<MudProgressLinear hidden="@(!loadedFiles.Any())" Color="Color.Tertiary" Size="Size.Medium" Indeterminate="true" Class="my-7" />
+@*<MudProgressLinear hidden="@(!loadedFiles.Any())" Color="Color.Tertiary" Size="Size.Medium" Indeterminate="true" Class="my-7" />
 
 <MudTable Items="@TxtItems" Dense="true" Hover="true" Bordered="true" Striped="true" Filter="new Func<JObject,bool>(FilterFunc)">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">EB TO EXCEL</MudText>
+        <MudText Typo="Typo.h6">XML ANALYSIS</MudText>
         <MudSpacer />
         <MudButton OnClick="ExportToExcel" Disabled="@(TxtItems.Count() <= 0)" Color="Color.Tertiary" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.ArrowDownward" Class="mr-1">Excel Export</MudButton>
         <MudButton OnClick="ClearTable" Disabled="@(TxtItems.Count() <= 0)" Color="Color.Error" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Clear">Clear Table</MudButton>
@@ -48,12 +53,11 @@
     <PagerContent>
         <MudTablePager />
     </PagerContent>
-</MudTable>
-
+</MudTable>*@
 
 @code {
 
-       private bool Clearing = false;
+    private bool Clearing = false;
     private static string DefaultDragClass = "relative rounded-lg border-2 border-dashed pa-4 mt-4 mud-width-full mud-height-full";
     private string DragClass = DefaultDragClass;
     private List<IBrowserFile> loadedFiles = new();
@@ -251,3 +255,5 @@
         }
     }
 }
+
+
