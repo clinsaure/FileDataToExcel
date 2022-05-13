@@ -111,11 +111,12 @@
         //HtmlItems.Clear();
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
         int fileExist = 0;
+        long MAXALLOWEDSIZE = 250000000;
 
         foreach (var file in loadedFiles)
         {
 
-            Stream stream = file.OpenReadStream();
+            Stream stream = file.OpenReadStream(MAXALLOWEDSIZE);
             MemoryStream ms = new MemoryStream();
             await stream.CopyToAsync(ms);
 
