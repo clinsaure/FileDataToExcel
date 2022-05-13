@@ -53,7 +53,7 @@
       "url": "_framework\/icudt.dat"
     },
     {
-      "hash": "sha256-MkWdThkAdsGoYzQ2PlmegO22uSAHjvVTdJHWF0dc9pA=",
+      "hash": "sha256-Y896HUg0CRcRzGEqJ64CyiN7yQTQMWE1BctQoZb85oc=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -69,7 +69,7 @@
       "url": "_framework\/ExcelNumberFormat.dll"
     },
     {
-      "hash": "sha256-qXqlc5ddGlo8iXmBxrfBAjCgQm963XzMDzg6omKUXbI=",
+      "hash": "sha256-eCgkN2hWDyrYjQ8ujVlr0iaKvIGJ6DV9rDzL0YLYCrE=",
       "url": "_framework\/FileDataToExcel.dll"
     },
     {
@@ -289,7 +289,7 @@
       "url": "_framework\/System.Private.Uri.dll"
     },
     {
-      "hash": "sha256-kwkwsz5RxodmfdDkkCkpUGiHmRmCs7b4LaeMDU2Xddo=",
+      "hash": "sha256-ZGb5wcA1HajJCrlN8aXDcZukpVCgdDOYZaltPqeK1Eo=",
       "url": "_framework\/System.Private.Xml.dll"
     },
     {
@@ -369,7 +369,7 @@
       "url": "_framework\/System.Threading.dll"
     },
     {
-      "hash": "sha256-DgflabsQevsXmiyZlAblM2dVYReAUXFP7hrl8+9oRyY=",
+      "hash": "sha256-Ow08oF9rwRU3raYufI36qkKbusiwgiJps4U9Qz2zL48=",
       "url": "_framework\/System.Xml.ReaderWriter.dll"
     },
     {
@@ -385,5 +385,5 @@
       "url": "_content\/MudBlazor\/MudBlazor.min.js"
     }
   ],
-  "version": "\/YWukMJG"
+  "version": "tBnsy67X"
 };
