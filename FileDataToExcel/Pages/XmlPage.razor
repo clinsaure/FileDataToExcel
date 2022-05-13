@@ -1,14 +1,9 @@
 ﻿@page "/xmldata"
 
-@using System.Diagnostics
-@using System.Dynamic
-@using System.ComponentModel
-@using System.Collections.Specialized
-@using System.Collections
 @inject IJSRuntime JSRuntime
 
 
-<PageTitle>File txt</PageTitle>
+<PageTitle>File xml</PageTitle>
 
 <MudText Typo="Typo.h3" GutterBottom="true" Align="Align.Center">XML ANALYSIS</MudText>
 
@@ -17,7 +12,7 @@
 <MudPaper @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass" Height="125px" Outlined="true" Class="@DragClass">
     @if (!Clearing)
     {
-        <InputFile OnChange="OnInputFileChanged" multiple class="absolute mud-width-full mud-height-full overflow-hidden z-2" style="opacity:0;" accept=".EB, .txt" />
+        <InputFile OnChange="OnInputFileChanged" multiple class="absolute mud-width-full mud-height-full overflow-hidden z-2" style="opacity:0;" accept=".xml" />
     }
     <MudText Typo="Typo.h6">Drag and drop files here or click MAX 10 FILES</MudText>
     @foreach (var file in loadedFiles)
@@ -27,33 +22,41 @@
 </MudPaper>
 <br />
 
+
+@*@foreach (var prop in props)
+{
+    <MudText>@prop</MudText>
+}
+
+<MudText>@filedata</MudText>*@
+
 @*<MudProgressLinear hidden="@(!loadedFiles.Any())" Color="Color.Tertiary" Size="Size.Medium" Indeterminate="true" Class="my-7" />
 
-<MudTable Items="@TxtItems" Dense="true" Hover="true" Bordered="true" Striped="true" Filter="new Func<JObject,bool>(FilterFunc)">
+    <MudTable Items="@TxtItems" Dense="true" Hover="true" Bordered="true" Striped="true" Filter="new Func<JObject,bool>(FilterFunc)">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">XML ANALYSIS</MudText>
-        <MudSpacer />
-        <MudButton OnClick="ExportToExcel" Disabled="@(TxtItems.Count() <= 0)" Color="Color.Tertiary" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.ArrowDownward" Class="mr-1">Excel Export</MudButton>
-        <MudButton OnClick="ClearTable" Disabled="@(TxtItems.Count() <= 0)" Color="Color.Error" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Clear">Clear Table</MudButton>
-        <MudSpacer />
-        <MudTextField @bind-Value="@_searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    <MudText Typo="Typo.h6">XML ANALYSIS</MudText>
+    <MudSpacer />
+    <MudButton OnClick="ExportToExcel" Disabled="@(TxtItems.Count() <= 0)" Color="Color.Tertiary" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.ArrowDownward" Class="mr-1">Excel Export</MudButton>
+    <MudButton OnClick="ClearTable" Disabled="@(TxtItems.Count() <= 0)" Color="Color.Error" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Clear">Clear Table</MudButton>
+    <MudSpacer />
+    <MudTextField @bind-Value="@_searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-        @foreach (var prop in props)
-        {
-            <MudTh>@prop</MudTh>
-        }
+    @foreach (var prop in props)
+    {
+    <MudTh>@prop</MudTh>
+    }
     </HeaderContent>
     <RowTemplate>
-        @foreach (var prop in props)
-        {
-            <MudTd DataLabel="@prop">@context.GetValue(prop)</MudTd>
-        }
+    @foreach (var prop in props)
+    {
+    <MudTd DataLabel="@prop">@context.GetValue(prop)</MudTd>
+    }
     </RowTemplate>
     <PagerContent>
-        <MudTablePager />
+    <MudTablePager />
     </PagerContent>
-</MudTable>*@
+    </MudTable>*@
 
 @code {
 
@@ -63,30 +66,30 @@
     private List<IBrowserFile> loadedFiles = new();
     private string _searchString = string.Empty;
 
-    private List<JObject> TxtItems = new();
-    private List<JObject> TxtItemsPre = new();
+    private List<MultiBlock> XmlItems = new();
+    private ErdbVersion ErdbVersion = new();
+    private Models.Block Block = new();
+
+
     private List<string> props = new();
-    private List<string> Tagnumbers = new();
+    private string filedata = string.Empty;
 
 
     protected override void OnInitialized()
     {
-        //foreach (var propertyInfo in typeof(TxtItem).GetProperties())
-        //{
-        //    props.Add(propertyInfo.Name);
-        //}
+        foreach (var propertyInfo in typeof(MultiBlock).GetProperties())
+        {
+            props.Add(propertyInfo.Name);
+        }
     }
 
 
     private void OnInputFileChanged(InputFileChangeEventArgs e)
     {
         ClearDragClass();
-        var files = e.GetMultipleFiles();
-        foreach (var file in files)
+        foreach (var file in e.GetMultipleFiles())
         {
-            //file.Name.Replace(" ", string.Empty);
-            if (file.Name.Split(".")[1] == "EB" || file.Name.Split(".")[1] == "txt")
-                loadedFiles.Add(file);
+            loadedFiles.Add(file);
         }
 
         Upload();
@@ -116,63 +119,65 @@
             stream.Close();
             var outputFileString = System.Text.Encoding.UTF8.GetString(ms.ToArray());
 
-            String[] fileContents = Regex.Split(outputFileString, @"{SYSTEM ENTITY (.*)}");
+            filedata = outputFileString;
 
-            fileContents = fileContents.Skip(1).ToArray();
+            //    String[] fileContents = Regex.Split(outputFileString, @"{SYSTEM ENTITY (.*)}");
 
-            foreach (var fileContent in fileContents)
-            {
-                if (!fileContent.Any(ext => "()".EndsWith(ext)))
-                {
+            //    fileContents = fileContents.Skip(1).ToArray();
 
-                    string strContent = fileContent.Replace("&T", "POINTTYPE=").Replace("&N", "TAGNUMBER=").Replace("\r\n", ",").Trim(',');
+            //    foreach (var fileContent in fileContents)
+            //    {
+            //        if (!fileContent.Any(ext => "()".EndsWith(ext)))
+            //        {
 
-                    String[] strContents = strContent.Split(",");
+            //            string strContent = fileContent.Replace("&T", "POINTTYPE=").Replace("&N", "TAGNUMBER=").Replace("\r\n", ",").Trim(',');
 
-                    JObject jObject = new();
+            //            String[] strContents = strContent.Split(",");
 
-                    foreach (string str in strContents)
-                    {
-                        if (str.Split("=")[0].Trim() == "TAGNUMBER")
-                        {
-                            if (!Tagnumbers.Contains(str.Split("=")[1].Trim()))
-                                Tagnumbers.Add(str.Split("=")[1].Trim());
-                            else
-                            {
-                                fileExist++;
-                                goto repeat;
-                            }
-                        }
+            //            JObject jObject = new();
 
-                        jObject.Add(new JProperty(str.Split("=")[0].Trim(), new JValue(str.Split("=")[1].Trim())));
+            //            foreach (string str in strContents)
+            //            {
+            //                if (str.Split("=")[0].Trim() == "TAGNUMBER")
+            //                {
+            //                    if (!Tagnumbers.Contains(str.Split("=")[1].Trim()))
+            //                        Tagnumbers.Add(str.Split("=")[1].Trim());
+            //                    else
+            //                    {
+            //                        fileExist++;
+            //                        goto repeat;
+            //                    }
+            //                }
 
-                        if (!props.Contains(str.Split("=")[0].Trim()))
-                        {
-                            props.Add(str.Split("=")[0].Trim());
-                        }
-                    }
+            //                jObject.Add(new JProperty(str.Split("=")[0].Trim(), new JValue(str.Split("=")[1].Trim())));
 
-                    TxtItemsPre.Add(jObject);
-                }
-            repeat:;
-            }
+            //                if (!props.Contains(str.Split("=")[0].Trim()))
+            //                {
+            //                    props.Add(str.Split("=")[0].Trim());
+            //                }
+            //            }
+
+            //            TxtItemsPre.Add(jObject);
+            //        }
+            //    repeat:;
+            //    }
+            //}
+
+            //// comple JObject with not contain Property
+            //foreach (var textitem in TxtItemsPre)
+            //{
+            //    foreach (var prop in props)
+            //    {
+            //        if (!textitem.ContainsKey(prop))
+            //        {
+            //            textitem.Add(new JProperty(prop, new JValue("")));
+            //        }
+            //    }
+            //    TxtItems.Add(textitem);
         }
 
-        // comple JObject with not contain Property
-        foreach (var textitem in TxtItemsPre)
-        {
-            foreach (var prop in props)
-            {
-                if (!textitem.ContainsKey(prop))
-                {
-                    textitem.Add(new JProperty(prop, new JValue("")));
-                }
-            }
-            TxtItems.Add(textitem);
-        }
-
-        if (fileExist > 0)
-            Snackbar.Add("" + fileExist + " File(s) already exist", Severity.Info);
+        //if (fileExist > 0)
+        //    Snackbar.Add("" + fileExist + " File(s) already exist", Severity.Info);
 
         await Clear();
 
@@ -181,10 +186,8 @@
 
     private void ClearTable()
     {
-        TxtItems.Clear();
+        XmlItems.Clear();
         props.Clear();
-        Tagnumbers.Clear();
-        TxtItemsPre.Clear();
         this.StateHasChanged();
     }
 
@@ -214,45 +217,45 @@
     public async Task ExportToExcel()
     {
 
-        using (var workbook = new XLWorkbook())
-        {
-            IXLWorksheet worksheet = workbook.Worksheets.Add("System");
-            var p = 1;
-            foreach (var prop in props)
-            {
-                worksheet.Cell(1, p).Value = prop;
-                p++;
-            }
+        //using (var workbook = new XLWorkbook())
+        //{
+        //    IXLWorksheet worksheet = workbook.Worksheets.Add("System");
+        //    var p = 1;
+        //    foreach (var prop in props)
+        //    {
+        //        worksheet.Cell(1, p).Value = prop;
+        //        p++;
+        //    }
 
 
-            for (int i = 1; i <= props.Count(); i++)
-            {
-                worksheet.Cell(1, i).Style.Font.Bold = true;
-            }
+        //    for (int i = 1; i <= props.Count(); i++)
+        //    {
+        //        worksheet.Cell(1, i).Style.Font.Bold = true;
+        //    }
 
-            int index = 1;
-            foreach (var txtItem in TxtItems)
-            {
-                int i = 1;
-                foreach (var prop in props)
-                {
-                    worksheet.Cell(index + 1, i).Value = txtItem.GetValue(prop).ToString();
-                    i++;
-                }
-                index++;
-            }
+        //    int index = 1;
+        //    foreach (var txtItem in TxtItems)
+        //    {
+        //        int i = 1;
+        //        foreach (var prop in props)
+        //        {
+        //            worksheet.Cell(index + 1, i).Value = txtItem.GetValue(prop).ToString();
+        //            i++;
+        //        }
+        //        index++;
+        //    }
 
-            using (var stream = new MemoryStream())
-            {
-                workbook.SaveAs(stream);
-                var content = stream.ToArray();
+        //    using (var stream = new MemoryStream())
+        //    {
+        //        workbook.SaveAs(stream);
+        //        var content = stream.ToArray();
 
-                var fileName = "Output_TXT_Files_" + DateTime.Now.ToString("dd-MM-yyyy") + " .xlsx";
-                await JSRuntime.InvokeAsync
-                <object>
-                    ("saveAsFile", fileName, Convert.ToBase64String(content));
-            }
-        }
+        //        var fileName = "Output_TXT_Files_" + DateTime.Now.ToString("dd-MM-yyyy") + " .xlsx";
+        //        await JSRuntime.InvokeAsync
+        //        <object>
+        //            ("saveAsFile", fileName, Convert.ToBase64String(content));
+        //    }
+        //}
     }
 }
 
