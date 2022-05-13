@@ -223,11 +223,11 @@ namespace FileDataToExcel.Models
 		[XmlElement(ElementName = "Block")]
 		public Block Block { get; set; }
 
-		[XmlAttribute(AttributeName = "xmlns")]
-		public string Xmlns { get; set; }
+		//[XmlAttribute(AttributeName = "xmlns")]
+		//public string Xmlns { get; set; }
 
-		[XmlText]
-		public string Text { get; set; }
+		//[XmlText]
+		//public string Text { get; set; }
 	}
 
 
