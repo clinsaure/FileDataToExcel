@@ -9,7 +9,7 @@ namespace FileDataToExcel.Models
 	//    var test = (MultiBlock)serializer.Deserialize(reader);
 	// }
 
-	[XmlRoot(ElementName = "ErdbVersion")]
+	[Serializable, XmlRoot(ElementName = "ErdbVersion")]
 	public class ErdbVersion
 	{
 
@@ -26,7 +26,7 @@ namespace FileDataToExcel.Models
 		public string DbLangID { get; set; }
 	}
 
-	[XmlRoot(ElementName = "Coord")]
+	[Serializable, XmlRoot(ElementName = "Coord")]
 	public class Coord
 	{
 
@@ -43,7 +43,7 @@ namespace FileDataToExcel.Models
 		public int Bottom { get; set; }
 	}
 
-	[XmlRoot(ElementName = "BlockDef")]
+	[Serializable, XmlRoot(ElementName = "BlockDef")]
 	public class BlockDef
 	{
 
@@ -90,7 +90,7 @@ namespace FileDataToExcel.Models
 		public object Container { get; set; }
 	}
 
-	[XmlRoot(ElementName = "Parameter")]
+	[Serializable, XmlRoot(ElementName = "Parameter")]
 	public class Parameter
 	{
 
@@ -101,7 +101,7 @@ namespace FileDataToExcel.Models
 		public string ParamValue { get; set; }
 	}
 
-	[XmlRoot(ElementName = "Parameters")]
+	[Serializable, XmlRoot(ElementName = "Parameters")]
 	public class Parameters
 	{
 
@@ -109,7 +109,7 @@ namespace FileDataToExcel.Models
 		public List<Parameter> Parameter { get; set; }
 	}
 
-	[XmlRoot(ElementName = "SymbolAttr")]
+	[Serializable, XmlRoot(ElementName = "SymbolAttr")]
 	public class SymbolAttr
 	{
 
@@ -135,7 +135,7 @@ namespace FileDataToExcel.Models
 		public int YCoord { get; set; }
 	}
 
-	[XmlRoot(ElementName = "SymbolAttrs")]
+	[Serializable, XmlRoot(ElementName = "SymbolAttrs")]
 	public class SymbolAttrs
 	{
 
@@ -143,7 +143,7 @@ namespace FileDataToExcel.Models
 		public List<SymbolAttr> SymbolAttr { get; set; }
 	}
 
-	[XmlRoot(ElementName = "Vertex")]
+	[Serializable, XmlRoot(ElementName = "Vertex")]
 	public class Vertex
 	{
 
@@ -154,7 +154,7 @@ namespace FileDataToExcel.Models
 		public int YVertex { get; set; }
 	}
 
-	[XmlRoot(ElementName = "Connection")]
+	[Serializable, XmlRoot(ElementName = "Connection")]
 	public class Connection
 	{
 
@@ -177,7 +177,7 @@ namespace FileDataToExcel.Models
 		public List<Vertex> Vertex { get; set; }
 	}
 
-	[XmlRoot(ElementName = "Connections")]
+	[Serializable, XmlRoot(ElementName = "Connections")]
 	public class Connections
 	{
 
@@ -185,7 +185,7 @@ namespace FileDataToExcel.Models
 		public List<Connection> Connection { get; set; }
 	}
 
-	[XmlRoot(ElementName = "Block")]
+	[Serializable, XmlRoot(ElementName = "Block")]
 	public class Block
 	{
 
@@ -205,7 +205,7 @@ namespace FileDataToExcel.Models
 		public EmbBlocks EmbBlocks { get; set; }
 	}
 
-	[XmlRoot(ElementName = "EmbBlocks")]
+	[Serializable, XmlRoot(ElementName = "EmbBlocks")]
 	public class EmbBlocks
 	{
 
@@ -213,7 +213,7 @@ namespace FileDataToExcel.Models
 		public List<Block> Block { get; set; }
 	}
 
-	[XmlRoot(ElementName = "MultiBlock")]
+	[Serializable, XmlRoot(ElementName = "MultiBlock")]
 	public class MultiBlock
 	{
 
@@ -229,6 +229,5 @@ namespace FileDataToExcel.Models
 		//[XmlText]
 		//public string Text { get; set; }
 	}
-
 
 }

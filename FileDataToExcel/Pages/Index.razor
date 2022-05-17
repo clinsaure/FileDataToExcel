@@ -2,11 +2,20 @@
 
 <PageTitle>Index</PageTitle>
 
-<MudText Typo="Typo.h3" GutterBottom="true" Align="Align.Center">MDCSTEC TOOLS</MudText>
-
-<br/>
-    <MudPaper Class="d-flex align-justify flex-grow-1 gap-4" Elevation="0">
-    <MudLink Href="txtdata" Underline="Underline.None"><MudPaper Class="pa-16 ma-2 mud-theme-info">TXT FILE</MudPaper></MudLink>
-    <MudLink Href="htmldata" Underline="Underline.None"><MudPaper Class="pa-16 ma-2 mud-theme-tertiary">HTML FILE</MudPaper></MudLink>
-    <MudLink Href="xmldata" Underline="Underline.None"><MudPaper Class="pa-16 ma-2 mud-theme-secondary">XML FILE</MudPaper></MudLink>
-    </MudPaper>
+<MudGrid>
+    <MudItem xs="12">
+        <MudText Typo="Typo.h3" GutterBottom="true" Align="Align.Center">MDCSTEC TOOLS</MudText>
+    </MudItem>
+    <MudItem xs="12">
+        <MudLink Href="txtdata" Underline="Underline.None"><MudPaper Elevation="10" Class="d-flex align-center justify-center mud-width-full py-8 mud-theme-primary">TXT FILE</MudPaper></MudLink>
+    </MudItem>
+    <MudItem xs="6">
+        <MudLink Href="htmldata" Underline="Underline.None"><MudPaper Elevation="10" Class="d-flex align-center justify-center mud-width-full py-8 mud-theme-tertiary">HTML FILE</MudPaper></MudLink>
+    </MudItem>
+    <MudItem xs="6">
+        <MudLink Href="xmldata" Underline="Underline.None"><MudPaper Elevation="10" Class="d-flex align-center justify-center mud-width-full py-8 mud-theme-secondary">XML FILE</MudPaper></MudLink>
+    </MudItem>
+    @*<MudItem xs="3">
+        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">xs=3</MudPaper>
+        </MudItem>*@
+</MudGrid>

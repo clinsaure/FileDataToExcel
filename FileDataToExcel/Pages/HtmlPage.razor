@@ -1,62 +1,55 @@
 ﻿@page "/htmldata"
 
-
 @using FileDataToExcel.Models
 @using System.Diagnostics
 @inject IJSRuntime JSRuntime
-
+@inject ISnackbar Snackbar
 
 <PageTitle>File html</PageTitle>
 
-<MudText Typo="Typo.h3" GutterBottom="true" Align="Align.Center">HMI ANALYSIS</MudText>
+<MudGrid>
+    <MudItem xs="12">
+        <MudText Typo="Typo.h3" GutterBottom="true" Align="Align.Center">HMI ANALYSIS</MudText>
+    </MudItem>
+    <MudItem Class="mud-theme-primary rounded-lg" xs="12">
+        <MudPaper @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass" Height="125px" Outlined="true" Class="@DragClass">
+            @if (!Clearing)
+            {
+                <InputFile OnChange="OnInputFileChanged" multiple class="absolute mud-width-full mud-height-full overflow-hidden z-2" style="opacity:0;" accept=".html, .htm" />
+            }
+            <MudText Typo="Typo.h6">Drag and drop files here or click MAX 10 FILES</MudText>
+            @foreach (var file in loadedFiles)
+            {
+                <MudChip Color="Color.Dark" Text="@file.Name" />
+            }
+        </MudPaper>
+        <MudProgressLinear hidden="@(!loadedFiles.Any())" Color="Color.Tertiary" Size="Size.Medium" Indeterminate="true" Class="my-7" />
+    </MudItem>
+    <MudItem Class="mud-theme-primary rounded-lg" xs="12">
+        <MudDataGrid T="HtmlItem" MultiSelection="true" Items="@HtmlItems" Sortable="true" Filterable="true" QuickFilter="@_quickFilter"
+                     Hideable="true" Hover="true" Dense="true" Bordered="true" Striped="true">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">HMI ANALYSIS</MudText>
+                <MudSpacer />
+                <MudButton OnClick="ExportToExcel" Disabled="@(HtmlItems.Count() <= 0)" Color="Color.Tertiary" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.ArrowDownward" Class="mr-1">Excel Export</MudButton>
+                <MudButton OnClick="ClearTable" Disabled="@(HtmlItems.Count() <= 0)" Color="Color.Error" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Clear">Clear Table</MudButton>
+                <MudSpacer />
+                <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <Columns>
+                @foreach (var prop in props)
+                {
+                    <Column T="HtmlItem" Field="@prop" />
+                }
+            </Columns>
+            <PagerContent>
+                <MudDataGridPager T="HtmlItem" />
+            </PagerContent>
+        </MudDataGrid>
+    </MudItem>
+</MudGrid>
 
-@inject ISnackbar Snackbar
-
-<MudPaper @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass" Height="125px" Outlined="true" Class="@DragClass">
-    @if (!Clearing)
-    {
-        <InputFile OnChange="OnInputFileChanged" multiple class="absolute mud-width-full mud-height-full overflow-hidden z-2" style="opacity:0;" accept=".html, .htm" />
-    }
-    <MudText Typo="Typo.h6">Drag and drop files here or click MAX 10 FILES</MudText>
-    @foreach (var file in loadedFiles)
-    {
-        <MudChip Color="Color.Dark" Text="@file.Name" />
-    }
-</MudPaper>
-<br />
-
-<MudProgressLinear hidden="@(!loadedFiles.Any())" Color="Color.Tertiary" Size="Size.Medium" Indeterminate="true" Class="my-7" />
-
-@*<MudToolBar DisableGutters="true" Class="gap-4">
-    <MudButton OnClick="Upload" Disabled="@(!loadedFiles.Any())" Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Filled.CloudUpload" Class="mr-1">Upload</MudButton>
-    <MudButton OnClick="Clear" Disabled="@(!loadedFiles.Any())" Color="Color.Error" Variant="Variant.Filled" StartIcon="@Icons.Filled.Clear">Clear</MudButton>
-    </MudToolBar>*@
-
-@*<MudText Typo="Typo.h6">@filesCount</MudText>*@
-
-<MudDataGrid T="HtmlItem" MultiSelection="true" Items="@HtmlItems" Sortable="true" Filterable="true" QuickFilter="@_quickFilter"
-             Hideable="true" Hover="true" Dense="true" Bordered="true" Striped="true">
-    <ToolBarContent>
-        <MudText Typo="Typo.h6">HMI ANALYSIS</MudText>
-        <MudSpacer />
-        <MudButton OnClick="ExportToExcel" Disabled="@(HtmlItems.Count() <= 0)" Color="Color.Tertiary" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.ArrowDownward" Class="mr-1">Excel Export</MudButton>
-        <MudButton OnClick="ClearTable" Disabled="@(HtmlItems.Count() <= 0)" Color="Color.Error" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Clear">Clear Table</MudButton>
-        <MudSpacer />
-        <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
-                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-    </ToolBarContent>
-    <Columns>
-        @*<SelectColumn T="HtmlItem" />*@
-        @foreach (var prop in props)
-        {
-            <Column T="HtmlItem" Field="@prop" />
-        }
-
-    </Columns>
-    <PagerContent>
-        <MudDataGridPager T="HtmlItem" />
-    </PagerContent>
-</MudDataGrid>
 
 
 @code {
