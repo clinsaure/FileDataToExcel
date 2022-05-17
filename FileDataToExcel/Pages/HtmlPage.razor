@@ -26,27 +26,7 @@
         <MudProgressLinear hidden="@(!loadedFiles.Any())" Color="Color.Tertiary" Size="Size.Medium" Indeterminate="true" Class="my-7" />
     </MudItem>
     <MudItem Class="mud-theme-primary rounded-lg" xs="12">
-        <MudDataGrid T="HtmlItem" MultiSelection="true" Items="@HtmlItems" Sortable="true" Filterable="true" QuickFilter="@_quickFilter"
-                     Hideable="true" Hover="true" Dense="true" Bordered="true" Striped="true">
-            <ToolBarContent>
-                <MudText Typo="Typo.h6">HMI ANALYSIS</MudText>
-                <MudSpacer />
-                <MudButton OnClick="ExportToExcel" Disabled="@(HtmlItems.Count() <= 0)" Color="Color.Tertiary" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.ArrowDownward" Class="mr-1">Excel Export</MudButton>
-                <MudButton OnClick="ClearTable" Disabled="@(HtmlItems.Count() <= 0)" Color="Color.Error" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Clear">Clear Table</MudButton>
-                <MudSpacer />
-                <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
-                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-            </ToolBarContent>
-            <Columns>
-                @foreach (var prop in props)
-                {
-                    <Column T="HtmlItem" Field="@prop" />
-                }
-            </Columns>
-            <PagerContent>
-                <MudDataGridPager T="HtmlItem" />
-            </PagerContent>
-        </MudDataGrid>
+        <GridComponent T="HtmlItem" Items="HtmlItems" Props="props" TableName="HMI ANALYSIS"></GridComponent>
     </MudItem>
 </MudGrid>
 
@@ -55,15 +35,14 @@
 @code {
 
     private bool Clearing = false;
-    //private bool ClearTable = false;
     private static string DefaultDragClass = "relative rounded-lg border-2 border-dashed pa-4 mt-4 mud-width-full mud-height-full";
     private string DragClass = DefaultDragClass;
     private List<IBrowserFile> loadedFiles = new();
     private string? _searchString;
     private List<string?> props = new();
+    private HtmlItem HtmlItem = new();
     private List<HtmlItem> HtmlItems = new();
 
-    //private string? filesCount;
 
     protected override void OnInitialized()
     {
@@ -143,12 +122,6 @@
         this.StateHasChanged();
     }
 
-    private void ClearTable()
-    {
-        HtmlItems.Clear();
-        this.StateHasChanged();
-    }
-
     private void SetDragClass()
     {
         DragClass = $"{DefaultDragClass} mud-border-primary";
@@ -157,63 +130,5 @@
     private void ClearDragClass()
     {
         DragClass = DefaultDragClass;
-    }
-
-    // quick filter - filter gobally across multiple columns with the same input
-    private Func<HtmlItem, bool> _quickFilter => x =>
-    {
-        if (string.IsNullOrWhiteSpace(_searchString))
-            return true;
-
-        foreach (var prop in props)
-        {
-            if (x.GetType().GetProperty(prop).GetValue(x, null).ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-                return true;
-        }
-
-        return false;
-    };
-
-    public async Task ExportToExcel()
-    {
-
-        using (var workbook = new XLWorkbook())
-        {
-
-            IXLWorksheet worksheet = workbook.Worksheets.Add("HMI-ANALYSIS");
-            var p = 1;
-            foreach (var prop in props)
-            {
-                worksheet.Cell(1, p).Value = prop;
-                p++;
-            }
-
-
-            for (int i = 1; i <= props.Count(); i++)
-            {
-                worksheet.Cell(1, i).Style.Font.Bold = true;
-            }
-
-            int index = 1;
-            foreach (var htmlitem in HtmlItems)
-            {
-                int i = 1;
-                foreach (var prop in props)
-                {
-                    worksheet.Cell(index + 1, i).Value = htmlitem.GetType().GetProperty(prop).GetValue(htmlitem, null);
-                    i++;
-                }
-                index++;
-            }
-
-            using (var stream = new MemoryStream())
-            {
-                workbook.SaveAs(stream);
-                var content = stream.ToArray();
-
-                var fileName = "Output_HTML_Files_" + DateTime.Now.ToString("dd-MM-yyyy") + " .xlsx";
-                await JSRuntime.InvokeAsync<object>("saveAsFile", fileName, Convert.ToBase64String(content));
-            }
-        }
     }
 }
