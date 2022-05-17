@@ -10,6 +10,10 @@
     },
     {
       "hash": "sha256-r76pcMtyyaXewSEqDzqV64kkjsYdDUiWLB79Ai2DKHw=",
+      "url": "icon-192.png"
+    },
+    {
+      "hash": "sha256-r76pcMtyyaXewSEqDzqV64kkjsYdDUiWLB79Ai2DKHw=",
       "url": "icon-512.png"
     },
     {
@@ -53,7 +57,7 @@
       "url": "_framework\/icudt.dat"
     },
     {
-      "hash": "sha256-PICudWdkkpSzp+isTsXJaw\/seNA3p13qbTZLDy+rYYQ=",
+      "hash": "sha256-lzZg176ijIWfXEcCAwV7yOVCQ1wPY5LDsNG+KAUkhzk=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -69,7 +73,7 @@
       "url": "_framework\/ExcelNumberFormat.dll"
     },
     {
-      "hash": "sha256-g9IxZvk12ucsgNH4XL9GPbhc6HGpIw5ZEpEfVXYLM6k=",
+      "hash": "sha256-1\/BYr\/5Tok2\/hCvCBrb8sd1quq9xda4FA\/jO0mnzSRA=",
       "url": "_framework\/FileDataToExcel.dll"
     },
     {
@@ -385,5 +389,5 @@
       "url": "_content\/MudBlazor\/MudBlazor.min.js"
     }
   ],
-  "version": "DQk\/kbe4"
+  "version": "B3Z2tR37"
 };
