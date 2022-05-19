@@ -1,88 +1,159 @@
 ﻿@page "/xmldata"
-
+@using System.Xml.Serialization
+@using System.Xml.Linq
+@using System.Xml
+@using System.Text
 @inject IJSRuntime JSRuntime
-
+@inject ISnackbar Snackbar
 
 <PageTitle>File xml</PageTitle>
 
-<MudText Typo="Typo.h3" GutterBottom="true" Align="Align.Center">XML ANALYSIS</MudText>
+<MudGrid>
+    <MudItem xs="12">
+        <MudText Typo="Typo.h3" GutterBottom="true" Align="Align.Center">XML ANALYSIS</MudText>
+    </MudItem>
+    <MudItem Class="mud-theme-primary rounded-lg" xs="12">
+        <MudPaper @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass" Height="125px" Outlined="true" Class="@DragClass">
+            @if (!Clearing)
+            {
+                <InputFile OnChange="OnInputFileChanged" multiple class="absolute mud-width-full mud-height-full overflow-hidden z-2" style="opacity:0;" accept=".xml" />
+            }
+            <MudText Typo="Typo.h6">Drag and drop files here or click MAX 10 FILES</MudText>
+            @foreach (var file in loadedFiles)
+            {
+                <MudChip Color="Color.Dark" Text="@file.Name" />
+            }
+        </MudPaper>
 
-@inject ISnackbar Snackbar
+        <MudProgressLinear hidden="@(!loadedFiles.Any())" Color="Color.Secondary" Size="Size.Medium" Indeterminate="true" Class="my-7" />
+    </MudItem>
+    <MudItem Class="mud-theme-primary rounded-l-lg" xs="2">
+        <MudPaper Class="d-flex align-center mud-width-full py-8" Elevation="10">
+            <MudList Clickable="true">
+                <MudListSubheader>
+                    <MudText Typo="Typo.h5"> MultiBlock</MudText>
+                </MudListSubheader>
+                @if (ShowGrid)
+                {
+                    <MudListItem Icon="@Icons.Filled.Dashboard" IconColor="Color.Primary" Text="ErdbVersion" OnClick="@(() => onclick("ErdbVersion", MultiBlock.ErdbVersion))" />
+                    <MudListItem Icon="@Icons.Filled.Security" IconColor="Color.Success" Text="@MultiBlock.Block.BlockDef.BlockName" OnClick="@(() => onclick("Block", MultiBlock.Block))" />
+                    <MudListItem Icon="@Icons.Filled.AdminPanelSettings" IconColor="Color.Warning" Text="EmbBlock" InitiallyExpanded="true">
+                        <NestedList>
+                            @foreach (var embBlock in MultiBlock.Block.EmbBlocks.Block)
+                            {
+                                <MudListItem Icon="@Icons.Material.Filled.Security" IconColor="Color.Info" Text="@embBlock.BlockDef.BlockName" OnClick="@(() => onclick("EmbBlock", embBlock))" />
+                            }
+                        </NestedList>
+                    </MudListItem>
+                }
+            </MudList>
+        </MudPaper>
+    </MudItem>
+    <MudItem Class="mud-theme-primary rounded-r-lg" xs="10">
 
-<MudPaper @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass" Height="125px" Outlined="true" Class="@DragClass">
-    @if (!Clearing)
-    {
-        <InputFile OnChange="OnInputFileChanged" multiple class="absolute mud-width-full mud-height-full overflow-hidden z-2" style="opacity:0;" accept=".xml" />
-    }
-    <MudText Typo="Typo.h6">Drag and drop files here or click MAX 10 FILES</MudText>
-    @foreach (var file in loadedFiles)
-    {
-        <MudChip Color="Color.Dark" Text="@file.Name" />
-    }
-</MudPaper>
-<br />
+        @switch (@_param)
+        {
+            case "ErdbVersion":
+                <GridComponent T="ErdbVersion" Items="ErdbVersions" Props="ErdbVersionProps" TableName="Erdb Version"></GridComponent>
+                break;
+            case "Block":
+                <GridComponent T="BlockDef" Items="BlockDefs" Props="BlockDefProps" TableName="BlockDef"></GridComponent>
+                <GridComponent T="Coord" Items="Coords" Props="CoordProps" TableName="Coord"></GridComponent>
+                <GridComponent T="Parameter" Items="Parameters.Parameter" Props="ParameterProps" TableName="Parameters"></GridComponent>
+                <GridComponent T="SymbolAttr" Items="SymbolAttrs.SymbolAttr" Props="SymbolAttrProps" TableName="SymbolAttrs"></GridComponent>
+                break;
+            case "EmbBlock":
+                <GridComponent T="BlockDef" Items="BlockDefs" Props="BlockDefProps" TableName="BlockDef"></GridComponent>
+                <GridComponent T="Coord" Items="Coords" Props="CoordProps" TableName="Coord"></GridComponent>
+                <GridComponent T="Parameter" Items="Parameters.Parameter" Props="ParameterProps" TableName="Parameters"></GridComponent>
+                <GridComponent T="SymbolAttr" Items="SymbolAttrs.SymbolAttr" Props="SymbolAttrProps" TableName="SymbolAttrs"></GridComponent>
+                <GridComponent T="Connection" Items="Connections.Connection" Props="ConnectionProps" TableName="Connections"></GridComponent>
+                <GridComponent T="Vertex" Items="VertexList" Props="VertexProps" TableName="Vertex"></GridComponent>
+                break;
+            default:
+                // code block
+                break;
+        }
+    </MudItem>
+</MudGrid>
 
-
-@*@foreach (var prop in props)
-{
-    <MudText>@prop</MudText>
-}
-
-<MudText>@filedata</MudText>*@
-
-@*<MudProgressLinear hidden="@(!loadedFiles.Any())" Color="Color.Tertiary" Size="Size.Medium" Indeterminate="true" Class="my-7" />
-
-    <MudTable Items="@TxtItems" Dense="true" Hover="true" Bordered="true" Striped="true" Filter="new Func<JObject,bool>(FilterFunc)">
-    <ToolBarContent>
-    <MudText Typo="Typo.h6">XML ANALYSIS</MudText>
-    <MudSpacer />
-    <MudButton OnClick="ExportToExcel" Disabled="@(TxtItems.Count() <= 0)" Color="Color.Tertiary" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.ArrowDownward" Class="mr-1">Excel Export</MudButton>
-    <MudButton OnClick="ClearTable" Disabled="@(TxtItems.Count() <= 0)" Color="Color.Error" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Clear">Clear Table</MudButton>
-    <MudSpacer />
-    <MudTextField @bind-Value="@_searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-    </ToolBarContent>
-    <HeaderContent>
-    @foreach (var prop in props)
-    {
-    <MudTh>@prop</MudTh>
-    }
-    </HeaderContent>
-    <RowTemplate>
-    @foreach (var prop in props)
-    {
-    <MudTd DataLabel="@prop">@context.GetValue(prop)</MudTd>
-    }
-    </RowTemplate>
-    <PagerContent>
-    <MudTablePager />
-    </PagerContent>
-    </MudTable>*@
 
 @code {
+
+    private bool ShowGrid { get; set; }
+    private string _param = string.Empty;
 
     private bool Clearing = false;
     private static string DefaultDragClass = "relative rounded-lg border-2 border-dashed pa-4 mt-4 mud-width-full mud-height-full";
     private string DragClass = DefaultDragClass;
     private List<IBrowserFile> loadedFiles = new();
-    private string _searchString = string.Empty;
 
-    private List<MultiBlock> XmlItems = new();
+    private List<ErdbVersion> ErdbVersions = new();
+    private List<BlockDef> BlockDefs = new();
+    private List<Coord> Coords = new();
+    private List<Vertex> VertexList = new();
+
+    private MultiBlock MultiBlock = new();
     private ErdbVersion ErdbVersion = new();
-    private Models.Block Block = new();
+    private BlockDef BlockDef = new();
+    private Coord Coord = new();
+    private Parameter Parameter = new();
+    private Parameters Parameters = new();
+    private SymbolAttr SymbolAttr = new();
+    private SymbolAttrs SymbolAttrs = new();
+    private Connection Connection = new();
+    private Connections Connections = new();
+    private Vertex Vertex = new();
 
-
-    private List<string> props = new();
-    private string filedata = string.Empty;
+    private List<string> ErdbVersionProps = new();
+    private List<string> BlockProps = new();
+    private List<string> BlockDefProps = new();
+    private List<string> CoordProps = new();
+    private List<string> ParameterProps = new();
+    private List<string> SymbolAttrProps = new();
+    private List<string> EmbBlockProps = new();
+    private List<string> ConnectionProps = new();
+    private List<string> VertexProps = new();
 
 
     protected override void OnInitialized()
     {
-        foreach (var propertyInfo in typeof(MultiBlock).GetProperties())
+       
+        foreach (var propertyInfo in typeof(ErdbVersion).GetProperties())
         {
-            props.Add(propertyInfo.Name);
+            ErdbVersionProps.Add(propertyInfo.Name);
+        }
+
+        foreach (var propertyInfo in typeof(BlockDef).GetProperties())
+        {
+            BlockDefProps.Add(propertyInfo.Name);
+        }
+
+        foreach (var propertyInfo in typeof(Coord).GetProperties())
+        {
+            CoordProps.Add(propertyInfo.Name);
+        }
+
+        foreach (var propertyInfo in typeof(Parameter).GetProperties())
+        {
+            ParameterProps.Add(propertyInfo.Name);
+        }
+
+        foreach (var propertyInfo in typeof(SymbolAttr).GetProperties())
+        {
+            SymbolAttrProps.Add(propertyInfo.Name);
+        }
+
+        foreach (var propertyInfo in typeof(Connection).GetProperties())
+        {
+            ConnectionProps.Add(propertyInfo.Name);
+        }
+
+        foreach (var propertyInfo in typeof(Vertex).GetProperties())
+        {
+            VertexProps.Add(propertyInfo.Name);
         }
     }
-
 
     private void OnInputFileChanged(InputFileChangeEventArgs e)
     {
@@ -107,87 +178,91 @@
     private async void Upload()
     {
         //Upload the files here
+        long MAXALLOWEDSIZE = 250000000;
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-        int fileExist = 0;
 
         foreach (var file in loadedFiles)
         {
-            Stream stream = file.OpenReadStream();
+
+            Stream stream = file.OpenReadStream(MAXALLOWEDSIZE);
             MemoryStream ms = new MemoryStream();
             await stream.CopyToAsync(ms);
 
             stream.Close();
-            var outputFileString = System.Text.Encoding.UTF8.GetString(ms.ToArray());
+            var outputFileString = Encoding.Unicode.GetString(ms.ToArray());
 
-            filedata = outputFileString;
+            string _byteOrderMarkUtf8 = Encoding.Unicode.GetString(Encoding.Unicode.GetPreamble());
+            if (outputFileString.StartsWith(_byteOrderMarkUtf8))
+            {
+                outputFileString = outputFileString.Remove(0, _byteOrderMarkUtf8.Length);
+                outputFileString = Regex.Replace(outputFileString, "xmlns=.*\">", ">", RegexOptions.IgnoreCase);
+            }
 
-            //    String[] fileContents = Regex.Split(outputFileString, @"{SYSTEM ENTITY (.*)}");
+            try
+            {
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(MultiBlock));
+                XDocument xDocument = XDocument.Parse(outputFileString);
+                //MultiBlock multiBlock = (MultiBlock)xmlSerializer.Deserialize(xDocument.CreateReader());
+                MultiBlock = (MultiBlock)xmlSerializer.Deserialize(xDocument.CreateReader());
 
-            //    fileContents = fileContents.Skip(1).ToArray();
+                ShowGrid = true;
 
-            //    foreach (var fileContent in fileContents)
-            //    {
-            //        if (!fileContent.Any(ext => "()".EndsWith(ext)))
-            //        {
+            }
+            catch (XmlException e)
+            {
+                Snackbar.Add(e.Message, Severity.Error);
+            }
 
-            //            string strContent = fileContent.Replace("&T", "POINTTYPE=").Replace("&N", "TAGNUMBER=").Replace("\r\n", ",").Trim(',');
-
-            //            String[] strContents = strContent.Split(",");
-
-            //            JObject jObject = new();
-
-            //            foreach (string str in strContents)
-            //            {
-            //                if (str.Split("=")[0].Trim() == "TAGNUMBER")
-            //                {
-            //                    if (!Tagnumbers.Contains(str.Split("=")[1].Trim()))
-            //                        Tagnumbers.Add(str.Split("=")[1].Trim());
-            //                    else
-            //                    {
-            //                        fileExist++;
-            //                        goto repeat;
-            //                    }
-            //                }
-
-            //                jObject.Add(new JProperty(str.Split("=")[0].Trim(), new JValue(str.Split("=")[1].Trim())));
-
-            //                if (!props.Contains(str.Split("=")[0].Trim()))
-            //                {
-            //                    props.Add(str.Split("=")[0].Trim());
-            //                }
-            //            }
-
-            //            TxtItemsPre.Add(jObject);
-            //        }
-            //    repeat:;
-            //    }
-            //}
-
-            //// comple JObject with not contain Property
-            //foreach (var textitem in TxtItemsPre)
-            //{
-            //    foreach (var prop in props)
-            //    {
-            //        if (!textitem.ContainsKey(prop))
-            //        {
-            //            textitem.Add(new JProperty(prop, new JValue("")));
-            //        }
-            //    }
-            //    TxtItems.Add(textitem);
         }
-
-        //if (fileExist > 0)
-        //    Snackbar.Add("" + fileExist + " File(s) already exist", Severity.Info);
 
         await Clear();
 
         this.StateHasChanged();
     }
 
-    private void ClearTable()
+    private void ClearList()
     {
-        XmlItems.Clear();
-        props.Clear();
+        ErdbVersions.Clear();
+        BlockDefs.Clear();
+        Coords.Clear();
+        VertexList.Clear();
+    }
+
+    private void onclick(string param, dynamic blockObj)
+    {
+        ClearList();
+        _param = param;
+
+        switch (param)
+        {
+            case "ErdbVersion":
+                ErdbVersions.Add(blockObj);
+                break;
+            case "Block":
+                BlockDefs.Add(blockObj.BlockDef);
+                Coords.Add(blockObj.BlockDef.Coord);
+                Parameters = blockObj.Parameters;
+                SymbolAttrs = blockObj.SymbolAttrs;
+                break;
+            case "EmbBlock":
+                BlockDefs.Add(blockObj.BlockDef);
+                Coords.Add(blockObj.BlockDef.Coord);
+                Parameters = blockObj.Parameters;
+                SymbolAttrs = blockObj.SymbolAttrs;
+                Connections = blockObj.Connections;
+                foreach (var connection in blockObj.Connections.Connection)
+                {
+                    foreach (var vertex in connection.Vertex)
+                    {
+                        VertexList.Add(vertex);
+                    }
+                }
+                break;
+            default:
+                // code block
+                break;
+        }
+
         this.StateHasChanged();
     }
 
@@ -199,63 +274,6 @@
     private void ClearDragClass()
     {
         DragClass = DefaultDragClass;
-    }
-
-    private bool FilterFunc(JObject jObject)
-    {
-        //Valeur = _searchString;
-        if (string.IsNullOrWhiteSpace(_searchString))
-            return true;
-        foreach (var prop in props)
-        {
-            if (jObject.GetValue(prop).ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-                return true;
-        }
-        return false;
-    }
-
-    public async Task ExportToExcel()
-    {
-
-        //using (var workbook = new XLWorkbook())
-        //{
-        //    IXLWorksheet worksheet = workbook.Worksheets.Add("System");
-        //    var p = 1;
-        //    foreach (var prop in props)
-        //    {
-        //        worksheet.Cell(1, p).Value = prop;
-        //        p++;
-        //    }
-
-
-        //    for (int i = 1; i <= props.Count(); i++)
-        //    {
-        //        worksheet.Cell(1, i).Style.Font.Bold = true;
-        //    }
-
-        //    int index = 1;
-        //    foreach (var txtItem in TxtItems)
-        //    {
-        //        int i = 1;
-        //        foreach (var prop in props)
-        //        {
-        //            worksheet.Cell(index + 1, i).Value = txtItem.GetValue(prop).ToString();
-        //            i++;
-        //        }
-        //        index++;
-        //    }
-
-        //    using (var stream = new MemoryStream())
-        //    {
-        //        workbook.SaveAs(stream);
-        //        var content = stream.ToArray();
-
-        //        var fileName = "Output_TXT_Files_" + DateTime.Now.ToString("dd-MM-yyyy") + " .xlsx";
-        //        await JSRuntime.InvokeAsync
-        //        <object>
-        //            ("saveAsFile", fileName, Convert.ToBase64String(content));
-        //    }
-        //}
     }
 }
 
