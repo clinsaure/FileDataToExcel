@@ -57,7 +57,7 @@
       "url": "_framework\/icudt.dat"
     },
     {
-      "hash": "sha256-rf6zJ7QjD89+koLG0kGLOEZIo7bdOA6paq0mnip\/ptU=",
+      "hash": "sha256-mX+7ohIxtUbYBZU0ju4Z2sAAZFElRjnw96ZvVhSw1rA=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -73,7 +73,7 @@
       "url": "_framework\/ExcelNumberFormat.dll"
     },
     {
-      "hash": "sha256-bP5AyNCz8q5iHf26iZJ+xpjyEshfViXMibaF6cyM6gI=",
+      "hash": "sha256-NXH+0UXPmbptTqbS3Bsjb7aOXJeUQ2cIulcqeScgDlg=",
       "url": "_framework\/FileDataToExcel.dll"
     },
     {
@@ -93,7 +93,7 @@
       "url": "_framework\/Microsoft.AspNetCore.Components.WebAssembly.dll"
     },
     {
-      "hash": "sha256-4a3k7McCiKrYz6kl4ivMx98lmP+3HF9Mstd9S5ynei8=",
+      "hash": "sha256-vjJCC46Hzgf\/ZgTr4WXYsiVj2glHlE1xVOg+eMJ2gog=",
       "url": "_framework\/Microsoft.CSharp.dll"
     },
     {
@@ -253,7 +253,7 @@
       "url": "_framework\/System.Linq.dll"
     },
     {
-      "hash": "sha256-uZLNvxmmUd2pvV89sByb+E80z0oKFO\/s+VJ18Cdqnng=",
+      "hash": "sha256-PRTGU0BLeNS0u80n3LxbSg2YTk03WELhP9u\/fSymhB8=",
       "url": "_framework\/System.Linq.Expressions.dll"
     },
     {
@@ -297,7 +297,7 @@
       "url": "_framework\/System.Private.Xml.dll"
     },
     {
-      "hash": "sha256-yPHvBIIE2KozsHueIcnkwgq3u4oBm+U34hr6ORwcR1c=",
+      "hash": "sha256-A1S2A2Jlk9DsH6zkzx9MUjMpF42mD6+efp3Ktimh7Og=",
       "url": "_framework\/System.Private.Xml.Linq.dll"
     },
     {
@@ -317,7 +317,7 @@
       "url": "_framework\/System.Runtime.CompilerServices.Unsafe.dll"
     },
     {
-      "hash": "sha256-+tooUApHpvM9ohdD3c+rjnrSUawAaeAvjj3c7109QgY=",
+      "hash": "sha256-+byyQ0FnuDG\/S4FJWhV4i4bAZw3R13sY\/rYb\/TvB8A8=",
       "url": "_framework\/System.Runtime.dll"
     },
     {
@@ -381,6 +381,10 @@
       "url": "_framework\/System.Xml.XDocument.dll"
     },
     {
+      "hash": "sha256-gqJPBCTL4VLtfTBrKgQ+soKRx7f3IB9AjPSX7\/SkkRg=",
+      "url": "_framework\/System.Xml.XmlSerializer.dll"
+    },
+    {
       "hash": "sha256-ybHKSgBBBRWcVB6v8mENCj\/QzDeglrAm6T6nQYEI5mk=",
       "url": "_content\/MudBlazor\/MudBlazor.min.css"
     },
@@ -389,5 +393,5 @@
       "url": "_content\/MudBlazor\/MudBlazor.min.js"
     }
   ],
-  "version": "8fKRvDFf"
+  "version": "K6JaWAat"
 };
