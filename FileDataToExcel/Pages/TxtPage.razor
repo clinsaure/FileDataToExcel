@@ -21,7 +21,7 @@
                 <MudChip Color="Color.Dark" Text="@file.Name" />
             }
         </MudPaper>
-        <MudProgressLinear hidden="@(!loadedFiles.Any())" Color="Color.Tertiary" Size="Size.Medium" Indeterminate="true" Class="my-7" />
+        <MudProgressLinear hidden="@(!loadedFiles.Any())" Color="Color.Tertiary" Striped="true" Size="Size.Large" Indeterminate="true" Class="my-7" />
     </MudItem>
     <MudItem Class="mud-theme-primary rounded-lg" xs="12">
         <MudTable Items="@TxtItems" Dense="true" Hover="true" Bordered="true" Striped="true" Filter="new Func<JObject,bool>(FilterFunc)">

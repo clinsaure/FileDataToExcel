@@ -16,7 +16,7 @@
         <MudPaper @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass" Height="125px" Outlined="true" Class="@DragClass">
             @if (!Clearing)
             {
-                <InputFile OnChange="OnInputFileChanged" multiple class="absolute mud-width-full mud-height-full overflow-hidden z-2" style="opacity:0;" accept=".xml" />
+                <InputFile OnChange="OnInputFileChanged" multiple class="absolute mud-width-full mud-height-full overflow-hidden z-2" style="opacity:0;" accept=".xml, .cnf" />
             }
             <MudText Typo="Typo.h6">Drag and drop files here or click MAX 10 FILES</MudText>
             @foreach (var file in loadedFiles)
@@ -25,9 +25,9 @@
             }
         </MudPaper>
 
-        <MudProgressLinear hidden="@(!loadedFiles.Any())" Color="Color.Secondary" Size="Size.Medium" Indeterminate="true" Class="my-7" />
+        <MudProgressLinear hidden="@(!loadedFiles.Any())" Color="Color.Tertiary" Striped="true" Size="Size.Large" Indeterminate="true" Class="my-7" />
     </MudItem>
-    <MudItem Class="mud-theme-primary rounded-l-lg" xs="2">
+    <MudItem Class="mud-theme-primary rounded-l-lg" xs="12" sm="3">
         <MudPaper Class="d-flex align-center mud-width-full py-8" Elevation="10">
             <MudList Clickable="true">
                 <MudListSubheader>
@@ -41,7 +41,7 @@
                         <NestedList>
                             @foreach (var embBlock in MultiBlock.Block.EmbBlocks.Block)
                             {
-                                <MudListItem Icon="@Icons.Material.Filled.Security" IconColor="Color.Info" Text="@embBlock.BlockDef.BlockName" OnClick="@(() => onclick("EmbBlock", embBlock))" />
+                                <MudListItem Icon="@Icons.Material.Filled.Security" IconColor="Color.Info" Text="@embBlock.BlockDef.BlockName" OnClick="@(() => onclick("Block", embBlock))" />
                             }
                         </NestedList>
                     </MudListItem>
@@ -49,7 +49,7 @@
             </MudList>
         </MudPaper>
     </MudItem>
-    <MudItem Class="mud-theme-primary rounded-r-lg" xs="10">
+    <MudItem Class="mud-theme-primary rounded-r-lg" xs="12" sm="9">
 
         @switch (@_param)
         {
@@ -61,15 +61,23 @@
                 <GridComponent T="Coord" Items="Coords" Props="CoordProps" TableName="Coord"></GridComponent>
                 <GridComponent T="Parameter" Items="Parameters.Parameter" Props="ParameterProps" TableName="Parameters"></GridComponent>
                 <GridComponent T="SymbolAttr" Items="SymbolAttrs.SymbolAttr" Props="SymbolAttrProps" TableName="SymbolAttrs"></GridComponent>
+                @if(Connections != null)
+                {
+                    <GridComponent T="Connection" Items="Connections.Connection" Props="ConnectionProps" TableName="Connections"></GridComponent>
+                    <GridComponent T="Vertex" Items="VertexList" Props="VertexProps" TableName="Vertex"></GridComponent>
+                }
                 break;
-            case "EmbBlock":
+           @* case "EmbBlock":
                 <GridComponent T="BlockDef" Items="BlockDefs" Props="BlockDefProps" TableName="BlockDef"></GridComponent>
                 <GridComponent T="Coord" Items="Coords" Props="CoordProps" TableName="Coord"></GridComponent>
                 <GridComponent T="Parameter" Items="Parameters.Parameter" Props="ParameterProps" TableName="Parameters"></GridComponent>
                 <GridComponent T="SymbolAttr" Items="SymbolAttrs.SymbolAttr" Props="SymbolAttrProps" TableName="SymbolAttrs"></GridComponent>
-                <GridComponent T="Connection" Items="Connections.Connection" Props="ConnectionProps" TableName="Connections"></GridComponent>
-                <GridComponent T="Vertex" Items="VertexList" Props="VertexProps" TableName="Vertex"></GridComponent>
-                break;
+                @if(Connections != null)
+                {
+                    <GridComponent T="Connection" Items="Connections.Connection" Props="ConnectionProps" TableName="Connections"></GridComponent>
+                    <GridComponent T="Vertex" Items="VertexList" Props="VertexProps" TableName="Vertex"></GridComponent>
+                }              
+                break;*@
             default:
                 // code block
                 break;
@@ -118,7 +126,7 @@
 
     protected override void OnInitialized()
     {
-       
+
         foreach (var propertyInfo in typeof(ErdbVersion).GetProperties())
         {
             ErdbVersionProps.Add(propertyInfo.Name);
@@ -238,23 +246,26 @@
             case "ErdbVersion":
                 ErdbVersions.Add(blockObj);
                 break;
+            //case "Block":
+            //    BlockDefs.Add(blockObj.BlockDef);
+            //    Coords.Add(blockObj.BlockDef.Coord);
+            //    Parameters = blockObj.Parameters;
+            //    SymbolAttrs = blockObj.SymbolAttrs;
+            //    break;
             case "Block":
                 BlockDefs.Add(blockObj.BlockDef);
                 Coords.Add(blockObj.BlockDef.Coord);
                 Parameters = blockObj.Parameters;
                 SymbolAttrs = blockObj.SymbolAttrs;
-                break;
-            case "EmbBlock":
-                BlockDefs.Add(blockObj.BlockDef);
-                Coords.Add(blockObj.BlockDef.Coord);
-                Parameters = blockObj.Parameters;
-                SymbolAttrs = blockObj.SymbolAttrs;
                 Connections = blockObj.Connections;
-                foreach (var connection in blockObj.Connections.Connection)
+                if (Connections != null)
                 {
-                    foreach (var vertex in connection.Vertex)
+                    foreach (var connection in blockObj.Connections.Connection)
                     {
-                        VertexList.Add(vertex);
+                        foreach (var vertex in connection.Vertex)
+                        {
+                            VertexList.Add(vertex);
+                        }
                     }
                 }
                 break;
