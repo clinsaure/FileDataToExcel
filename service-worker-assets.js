@@ -57,7 +57,7 @@
       "url": "_framework\/icudt.dat"
     },
     {
-      "hash": "sha256-j\/gstkR\/B1vgTOYtpKNENjWiVVcmYADErMHCIoXge8I=",
+      "hash": "sha256-HczwdlxXpyU77\/q1XkXPfE4voBqTnR51z+0RH2cOuqI=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -73,7 +73,7 @@
       "url": "_framework\/ExcelNumberFormat.dll"
     },
     {
-      "hash": "sha256-cWzPoJz1E6TgmgUHo4s+woTzkfdkoKIcMMEj1yv7U78=",
+      "hash": "sha256-dHzfoKmYFacy5X7pS0Z35sV20ZvezCRW7aF+N65LqXo=",
       "url": "_framework\/FileDataToExcel.dll"
     },
     {
@@ -393,5 +393,5 @@
       "url": "_content\/MudBlazor\/MudBlazor.min.js"
     }
   ],
-  "version": "h6yUeTIP"
+  "version": "Na+VBGiX"
 };
